@@ -10,13 +10,13 @@ class RowNode(ElementNode):
     """
     A node that represents a table row (<tr>).
 
-    Contains an ordered list of cells (td/th). Attributes from the
-    original <tr> tag are preserved.
+    Contains an ordered list of cells (td/th)
     """
+    allowed_tags = frozenset(("tr",))
 
     def __init__(
         self,
-        tag: str = "tr",
+        tag: str,
         attributes: Optional[Dict[str, str]] = None,
         children: Optional[List[CellNode]] = None,
     ) -> None:
@@ -37,10 +37,6 @@ class RowNode(ElementNode):
     def append_cell(self, cell: CellNode) -> None:
         """Add a cell to the row."""
         self.children().append(cell)
-
-    # def children(self) -> List[INode]:
-    #     """Return cells as children for generic tree traversal."""
-    #     return list(self._cells)
 
     def __repr__(self) -> str:
         return "RowNode({} cells)".format(len(self.cells))

@@ -32,16 +32,8 @@ class ElementNode(IElementNode):
         attributes: Optional[Dict[str, str]] = None,
         children: Optional[List[INode]] = None,
     ) -> None:
-        """
-        Initialize an element node.
-
-        Args:
-            tag: Lowercase tag name (e.g. 'div', 'table').
-            attributes: Optional mapping of attribute name -> value.
-            children: Optional list of child nodes.
-        """
         super().__init__()
-        self._tag = tag.lower() if tag else ""
+        self._tag = tag.lower() or ""
         self._attributes = dict(attributes) if attributes else {}
         self._children = list(children) if children else []
 
@@ -50,17 +42,16 @@ class ElementNode(IElementNode):
         """Return the tag name."""
         return self._tag
 
-    def get_open_tag(self) -> str:
+    def _get_open_tag(self) -> str:
         serialized_attrs = ''
         return f'<{self._tag} {serialized_attrs}>'
 
-    def get_close_tag(self) -> str:
-        serialized_attrs = ''
+    def _get_close_tag(self) -> str:
         return f'</{self._tag}>'
 
     @property
     def attributes(self) -> Dict[str, str]:
-        """Return a copy of the attributes dictionary."""
+        """Return a copy of the attributes mapping."""
         return dict(self._attributes)
 
     def children(self) -> List[INode]:
@@ -71,16 +62,13 @@ class ElementNode(IElementNode):
         """Add a child node."""
         self._children.append(node)
 
-    def get_html(self) -> str:
-
+    def to_html(self) -> str:
         result = ''
-        result += self.get_open_tag()
-
+        result += self._get_open_tag()
         for child in self._children:
-            result += child.get_html()
-        result += self.get_close_tag()
+            result += child.to_html()
+        result += self._get_close_tag()
         return result
-        return ''.join(child.get_html() for child in self._children)
 
     def __repr__(self) -> str:
         attrs = " ".join('{}="{}"'.format(k, v) for k, v in self._attributes.items())

@@ -13,46 +13,22 @@ class CellNode(ElementNode):
     Contains a list of child nodes (text, nested tables, or other elements).
     The tag type ('td' or 'th') and attributes are preserved.
     """
+    _default_tag: str = "td"
+    allowed_tags = frozenset(("td", "th"))
 
     def __init__(
         self,
-        tag: str = "td",
+        tag: str = _default_tag,
         attributes: Optional[Dict[str, str]] = None,
         children: Optional[List[INode]] = None,
     ) -> None:
-        """
-        Initialize a cell node.
-
-        Args:
-            tag: Either 'td' or 'th'.
-            attributes: Optional mapping of attribute name -> value.
-            children: Optional list of child nodes (e.g. TextNode, TableNode).
-        """
-        tag = tag.lower() if tag in ("td", "th") else "td"
+        tag = tag.lower() or self._default_tag
         super().__init__(tag, attributes, children)
-
-    @property
-    def tag(self) -> str:
-        """Return 'td' or 'th'."""
-        return self._tag
 
     @property
     def is_header(self) -> bool:
         """Return True if this cell is a header (th)."""
         return self._tag == "th"
-
-    @property
-    def attributes(self) -> Dict[str, str]:
-        """Return a copy of the attributes dictionary."""
-        return dict(self._attributes)
-
-    # def children(self) -> List[INode]:
-    #     """Return the list of child nodes."""
-    #     return list(self._children)
-
-    # def append_child(self, node: INode) -> None:
-    #     """Add a child node (e.g. text or nested table)."""
-    #     self._children.append(node)
 
     def __repr__(self) -> str:
         return "CellNode({!r}, {} children)".format(self._tag, len(self._children))

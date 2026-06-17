@@ -20,17 +20,10 @@ class INode(ABC):
     @abstractmethod
     def children(self) -> List["INode"]:
         """
-        Return the list of child nodes.
-
-        Default is empty list. Element-like nodes override to return their
-        actual children.
+        Return the list of child nodes/elements.
         """
         pass
 
     @abstractmethod
-    def get_html(self) -> str:
+    def to_html(self) -> str:
         return ''
-
-    # def __repr__(self) -> str:
-    #     """String representation for debugging."""
-    #     pass

@@ -2,7 +2,7 @@
 
 import html.parser
 from collections import deque
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Sequence
 
 from src.application.parser_port import HtmlParserPort
 from src.domain.nodes.node import INode
@@ -45,8 +45,7 @@ class _TableParser(html.parser.HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self._roots: List[INode] = []
-        self._stack: List[INode] = []
-        self._stack = deque()
+        self._stack: Sequence[INode] = deque()
         self._current_table: Optional[TableNode] = None
         self._current_row: Optional[RowNode] = None
         self.top_obj: Optional[IElementNode] = None
@@ -65,15 +64,15 @@ class _TableParser(html.parser.HTMLParser):
         tag_lower = tag.lower()
         attrs_d = _attrs_to_dict(attrs)
 
-        if tag_lower == "table":
-            node = TableNode(attributes=attrs_d)
+        if tag_lower in TableNode.allowed_tags:
+            node = TableNode(tag=tag_lower, attributes=attrs_d)
             self._current_table = node
 
-        elif tag_lower == "tr":
-            node = RowNode(attributes=attrs_d)
+        elif tag_lower in RowNode.allowed_tags:
+            node = RowNode(tag=tag_lower, attributes=attrs_d)
             self._current_row = node
 
-        elif tag_lower in ("td", "th"):
+        elif tag_lower in CellNode.allowed_tags:
             node = CellNode(tag=tag_lower, attributes=attrs_d)
 
         else:

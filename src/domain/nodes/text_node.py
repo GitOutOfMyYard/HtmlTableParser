@@ -15,7 +15,7 @@ class TextNode(INode):
         super().__init__()
         self._text = text or ""
 
-    def children(self) -> List["Node"]:
+    def children(self) -> List[INode]:
         return []
 
     @property
@@ -26,7 +26,7 @@ class TextNode(INode):
     def get_contents(self) -> str:
         return self.text
 
-    def get_html(self) -> str:
+    def to_html(self) -> str:
         return self._text
 
     def __repr__(self) -> str:

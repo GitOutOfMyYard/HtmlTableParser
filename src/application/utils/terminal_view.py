@@ -3,6 +3,7 @@
 from src import ParseHtmlUseCase
 from src.domain import TableNode, CellNode, TextNode
 from src.domain.nodes.element_node import IElementNode
+from src.domain.nodes.node import INode
 from src.infrastructure import StdlibHtmlParser
 from typing import List, Any
 
@@ -15,7 +16,7 @@ def view_html(html: str, *_: Any) -> None:
         print_table_nodes(root)
 
 
-def print_table_nodes(root: IElementNode) -> None:
+def print_table_nodes(root: INode) -> None:
     if isinstance(root, TableNode):
         print_table_in_console(root)
     else:
@@ -25,7 +26,7 @@ def print_table_nodes(root: IElementNode) -> None:
             print(f"Node: {root}")
 
 
-def _fetch_cell_text(node: IElementNode) -> List[str]:
+def _fetch_cell_text(node: INode) -> List[str]:
     if isinstance(node, TextNode):
         return [node.text]
     else:
@@ -33,7 +34,6 @@ def _fetch_cell_text(node: IElementNode) -> List[str]:
         for child in node.children():
             result.extend(_fetch_cell_text(child))
         return result
-        # return [_fetch_text(child) for child in node.children()]
 
 
 def print_table_in_console(node: TableNode) -> None:
