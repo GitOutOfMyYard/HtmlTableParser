@@ -1,8 +1,8 @@
 """Node representing an HTML <table> element."""
 
 from typing import Dict, List, Optional
-from html_table_parser.domain.nodes.element_node import ElementNode, IElementNode
-from html_table_parser.domain.nodes.row_node import RowNode
+from src.domain.nodes.element_node import ElementNode, IElementNode
+from src.domain.nodes.row_node import RowNode
 
 
 class TableNode(ElementNode):

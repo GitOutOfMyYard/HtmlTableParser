@@ -3,8 +3,8 @@ HTML table parser: parses HTML and converts it to a tree of Python objects.
 
 Usage:
 
-    from html_table_parser import ParseHtmlUseCase
-    from html_table_parser.infrastructure import StdlibHtmlParser
+    from src import ParseHtmlUseCase
+    from src.infrastructure import StdlibHtmlParser
 
     parser = StdlibHtmlParser()
     use_case = ParseHtmlUseCase(parser)
@@ -12,8 +12,8 @@ Usage:
     # roots[0] is a TableNode with rows and cells
 """
 
-from html_table_parser.application import ParseHtmlUseCase
-from html_table_parser.domain import (
+from src.application import ParseHtmlUseCase
+from src.domain import (
     INode,
     TableNode,
     RowNode,

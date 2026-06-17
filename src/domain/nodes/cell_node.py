@@ -2,8 +2,8 @@
 
 from typing import Dict, List, Optional
 
-from html_table_parser.domain.nodes.element_node import ElementNode
-from html_table_parser.domain.nodes.node import INode
+from src.domain.nodes.element_node import ElementNode
+from src.domain.nodes.node import INode
 
 
 class CellNode(ElementNode):

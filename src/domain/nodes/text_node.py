@@ -1,7 +1,7 @@
 """Leaf node that holds raw text content."""
 from typing import List
 
-from html_table_parser.domain.nodes.node import INode
+from src.domain.nodes.node import INode
 
 
 class TextNode(INode):

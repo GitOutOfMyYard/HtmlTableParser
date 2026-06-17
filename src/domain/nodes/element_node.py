@@ -2,7 +2,7 @@
 
 from typing import Dict, List, Optional
 from abc import abstractmethod
-from html_table_parser.domain.nodes.node import INode
+from src.domain.nodes.node import INode
 
 
 class IElementNode(INode):

@@ -4,22 +4,23 @@ import html.parser
 from collections import deque
 from typing import Dict, List, Optional
 
-from html_table_parser.application.parser_port import HtmlParserPort
-from html_table_parser.domain.nodes.node import INode
-from html_table_parser.domain.nodes.table_node import TableNode
-from html_table_parser.domain.nodes.row_node import RowNode
-from html_table_parser.domain.nodes.cell_node import CellNode
-from html_table_parser.domain.nodes.text_node import TextNode
-from html_table_parser.domain.nodes.element_node import ElementNode, IElementNode
+from src.application.parser_port import HtmlParserPort
+from src.domain.nodes.node import INode
+from src.domain.nodes.table_node import TableNode
+from src.domain.nodes.row_node import RowNode
+from src.domain.nodes.cell_node import CellNode
+from src.domain.nodes.text_node import TextNode
+from src.domain.nodes.element_node import ElementNode, IElementNode
 
 
 def _attrs_to_dict(attrs: List[tuple]) -> Dict[str, str]:
-    """Convert list of (name, value) attribute pairs to a dict."""
+    """Convert list of (name, value) attribute pairs of element to a dict."""
     return dict(attrs) if attrs else {}
 
 
 def _tag_of(node: INode) -> Optional[str]:
-    """Return the HTML tag name for a node, or None for non-elements (e.g. TextNode)."""
+    """Return the HTML tag name for a node,
+    or None for non-elements (e.g. TextNode)."""
     if isinstance(node, TableNode):
         return "table"
     if isinstance(node, RowNode):
@@ -33,7 +34,8 @@ def _tag_of(node: INode) -> Optional[str]:
 
 class _TableParser(html.parser.HTMLParser):
     """
-    Stateful HTML parser that builds a tree of TableNode/RowNode/CellNode/TextNode.
+    HTML parser implementation that builds a tree of
+    TableNode/RowNode/CellNode/TextNode.
 
     Handles <table>, <tr>, <td>, <th> and nested content. Other tags are
     represented as ElementNode. Builds a stack of open elements and
@@ -48,33 +50,6 @@ class _TableParser(html.parser.HTMLParser):
         self._current_table: Optional[TableNode] = None
         self._current_row: Optional[RowNode] = None
         self.top_obj: Optional[IElementNode] = None
-
-    # def _push(self, node: INode, parent_accepts: bool = True) -> None:
-    #     """Push node onto stack and optionally attach to parent."""
-    #
-    #     if self._stack and parent_accepts:
-    #         parent = self._stack[-1]
-    #         if isinstance(parent, TableNode):
-    #             if isinstance(node, RowNode):
-    #                 parent.append_row(node)
-    #         elif isinstance(parent, RowNode):
-    #             if isinstance(node, CellNode):
-    #                 parent.append_cell(node)
-    #         elif isinstance(parent, CellNode):
-    #             parent.append_child(node)
-    #         elif isinstance(parent, ElementNode):
-    #             self.top_obj = node
-    #             parent.append_child(node)
-    #     else:
-    #         self._roots.append(node)
-
-    # def _push(self, node: INode, parent: Optional[ElementNode] = None) -> Optional[ElementNode]:
-    #     """Push node onto stack and optionally attach to parent."""
-    #
-    #     if parent:
-    #         parent.append_child(node)
-    #     else:
-    #         self._roots.append(node)
 
     def _push(self, node: INode, parent_accepts: bool = True) -> None:
         """Push node onto stack and optionally attach to parent."""
@@ -107,20 +82,16 @@ class _TableParser(html.parser.HTMLParser):
 
     def handle_endtag(self, tag: str) -> None:
         tag_lower = tag.lower()
+        node = None
         while self._stack:
             node = self._stack.pop()
             if tag_lower == "table" and isinstance(node, TableNode):
                 self._current_table = None
             if tag_lower == "tr" and isinstance(node, RowNode):
                 self._current_row = None
-
-            # if self._stack and self._stack[0].tag == tag_lower:
-            #     self._roots.append()
-
             if node.tag == tag_lower:
                 self.top_obj = None
                 break
-
         if not self._stack and node:
             self._roots.append(node)
 
@@ -144,24 +115,17 @@ class _TableParser(html.parser.HTMLParser):
 
 class StdlibHtmlParser(HtmlParserPort):
     """
-    Parses HTML using Python's built-in html.parser.HTMLParser.
+    Parses HTML using built-in html.parser.HTMLParser.
 
     Produces a tree of TableNode, RowNode, CellNode, TextNode, and
-    ElementNode. Tables are first-class; other structure is kept as
-    ElementNode with children.
+    ElementNode.
     """
 
-    def parse(self, html: str) -> List[INode]:
+    def parse(self, html_content: str) -> List[INode]:
         """
-        Parse HTML and return root nodes (tables and/or elements).
-
-        Args:
-            html: Raw HTML string.
-
-        Returns:
-            List of root-level nodes. Typically TableNode instances for
-            each <table>, plus any top-level non-table elements as ElementNode.
+        Returns List of root-level nodes. TableNode instances for
+        each <table>, and any top-level non-table elements as ElementNode.
         """
         parser = _TableParser()
-        parser.feed(html)
+        parser.feed(html_content)
         return parser.get_roots()
