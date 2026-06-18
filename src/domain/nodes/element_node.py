@@ -8,6 +8,10 @@ from src.domain.nodes.node import INode
 class IElementNode(INode):
 
     @abstractmethod
+    def tag(self) -> str:
+        pass
+
+    @abstractmethod
     def append_child(self, node: INode) -> None:
         pass
 
