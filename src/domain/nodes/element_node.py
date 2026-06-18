@@ -7,6 +7,7 @@ from src.domain.nodes.node import INode
 
 class IElementNode(INode):
 
+    @property
     @abstractmethod
     def tag(self) -> str:
         pass
