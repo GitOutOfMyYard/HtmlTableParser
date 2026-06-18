@@ -1,4 +1,4 @@
-from src.parser.di_configuration.factories.stdlib_parser import (
+from src.di_configuration.factories.stdlib_parser import (
     StdLibParserFactory
 )
 

@@ -1,18 +1,13 @@
 """Funcs to display table cells text in console"""
 
-from src import ParseHtmlUseCase
-from src.domain import TableNode, CellNode, TextNode
-from src.domain.nodes.element_node import IElementNode
+from src.domain import TableNode, TextNode
 from src.domain.nodes.node import INode
-from src.infrastructure import StdlibHtmlParser
-from typing import List, Any
+from src.application.parser import HtmlParser
+from typing import List
 
 
-def view_html(html: str, *_: Any) -> None:
-    parser = StdlibHtmlParser()
-    use_case = ParseHtmlUseCase(parser)
-    roots = use_case.execute(html)
-    for root in roots:
+def view_html(html: str, parser: HtmlParser) -> None:
+    for root in parser.parse(html):
         print_table_nodes(root)
 
 
@@ -56,8 +51,3 @@ def print_table_in_console(node: TableNode) -> None:
         print(f"{row_num_text_prefix}{row_num_text_postfix}")
         print(row_to_print)
         print('=' * max_row_len)
-
-
-if __name__ == "__main__":
-    import sys
-    view_html(*sys.argv[1:])

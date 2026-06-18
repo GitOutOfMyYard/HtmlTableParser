@@ -1,8 +1,7 @@
 """ Example module"""
 
-from src import ParseHtmlUseCase
-from src.infrastructure import StdlibHtmlParser
 from src.application.utils.terminal_view import view_html
+from src.di_configuration import StdLibParserFactory
 
 
 def main() -> None:
@@ -42,7 +41,10 @@ table, th, td {
 </html>
     """
 
-    view_html(html)
+    factory = StdLibParserFactory()
+    parser = factory()
+    view_html(html, parser)
+
 
 if __name__ == "__main__":
     main()
